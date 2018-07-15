@@ -1,6 +1,7 @@
 #include "MemeField.h"
 #include "RectI.h"
 #include <random>
+#include <assert.h>
 
 MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos)
 {
@@ -44,19 +45,27 @@ void MemeField::Draw(Graphics& gfx) const
 	}
 }
 
-void MemeField::IfLeftClick(const Vei2 & gridPos)
+void MemeField::OnLeftClick(const Vei2& screenPos)
 {
-	TileAt(gridPos).Reveal();
+	Tile& tile = TileAt(ScreenToGrid(screenPos));
+	if (!tile.IsRevealed() && !tile.IsFlagged())
+	{
+		tile.Reveal();
+	}
 }
 
-void MemeField::IfRightClick(const Vei2 & gridPos)
+void MemeField::OnRightClick(const Vei2& screenPos)
 {
-	TileAt(gridPos).Flag();
+	Tile& tile = TileAt(ScreenToGrid(screenPos));
+	if (!tile.IsFlagged())
+	{
+		tile.Flag();
+	}
 }
 
-const Vei2 & MemeField::GetPos() const
+Vei2 MemeField::ScreenToGrid(const Vei2 & screenPos) const
 {
-	return pos;
+	return (screenPos - pos) / SpriteCodex::tileSize;
 }
 
 void MemeField::Tile::SpawnMeme()
@@ -85,6 +94,16 @@ void MemeField::Tile::Draw(const Vei2& screenPos, Graphics& gfx) const
 bool MemeField::Tile::HasMeme() const
 {
 	return hasMeme;
+}
+
+bool MemeField::Tile::IsRevealed() const
+{
+	return state == State::Revealed;
+}
+
+bool MemeField::Tile::IsFlagged() const
+{
+	return state == State::Flagged;
 }
 
 void MemeField::Tile::Reveal()

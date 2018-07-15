@@ -20,7 +20,6 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "SpriteCodex.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -42,11 +41,11 @@ void Game::UpdateModel()
 {
 	if (wnd.mouse.LeftIsPressed())
 	{
-		field.IfLeftClick(wnd.mouse.GetPos()/SpriteCodex::tileSize + field.GetPos());
+		field.OnLeftClick(wnd.mouse.GetPos());
 	}
 	else if (wnd.mouse.RightIsPressed())
 	{
-		field.IfRightClick(wnd.mouse.GetPos()/SpriteCodex::tileSize + field.GetPos());
+		field.OnRightClick(wnd.mouse.GetPos());
 	}
 }
 
