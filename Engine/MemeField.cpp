@@ -54,6 +54,11 @@ void MemeField::IfRightClick(const Vei2 & gridPos)
 	TileAt(gridPos).Flag();
 }
 
+const Vei2 & MemeField::GetPos() const
+{
+	return pos;
+}
+
 void MemeField::Tile::SpawnMeme()
 {
 	hasMeme = true;
@@ -89,5 +94,6 @@ void MemeField::Tile::Reveal()
 
 void MemeField::Tile::Flag()
 {
+
 	state = State::Flagged;
 }

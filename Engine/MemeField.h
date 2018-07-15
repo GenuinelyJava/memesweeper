@@ -40,4 +40,5 @@ public:
 	void Draw(Graphics& gfx) const;
 	void IfLeftClick(const Vei2& gridPos);
 	void IfRightClick(const Vei2& gridPos);
+	const Vei2& GetPos() const;
 };
