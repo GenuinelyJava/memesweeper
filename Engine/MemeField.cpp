@@ -44,6 +44,16 @@ void MemeField::Draw(Graphics& gfx) const
 	}
 }
 
+void MemeField::IfLeftClick(const Vei2 & gridPos)
+{
+	TileAt(gridPos).Reveal();
+}
+
+void MemeField::IfRightClick(const Vei2 & gridPos)
+{
+	TileAt(gridPos).Flag();
+}
+
 void MemeField::Tile::SpawnMeme()
 {
 	hasMeme = true;
@@ -70,4 +80,14 @@ void MemeField::Tile::Draw(const Vei2& screenPos, Graphics& gfx) const
 bool MemeField::Tile::HasMeme() const
 {
 	return hasMeme;
+}
+
+void MemeField::Tile::Reveal()
+{
+	state = State::Revealed;
+}
+
+void MemeField::Tile::Flag()
+{
+	state = State::Flagged;
 }

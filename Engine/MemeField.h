@@ -3,6 +3,7 @@
 #include "Vei2.h"
 #include "Graphics.h"
 #include "SpriteCodex.h"
+#include "Mouse.h"
 
 class MemeField
 {
@@ -19,6 +20,8 @@ private:
 		void SpawnMeme();
 		void Draw(const Vei2& screenPos, Graphics& gfx) const;
 		bool HasMeme() const;
+		void Reveal();
+		void Flag();
 	private:
 		State state = State::Hidden;
 		bool hasMeme = false;
@@ -35,4 +38,6 @@ private:
 public:
 	MemeField(int nMemes);
 	void Draw(Graphics& gfx) const;
+	void IfLeftClick(const Vei2& gridPos);
+	void IfRightClick(const Vei2& gridPos);
 };
