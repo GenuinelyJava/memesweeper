@@ -15,8 +15,18 @@ const MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos) const
 
 int MemeField::CalcSurroundingMemes(Vei2 gridPos)
 {
-	Tile& tile = TileAt(gridPos);
-	return 0;
+	int numOfMemes = 0;
+	for (int x = gridPos.x - 1; x <= gridPos.x + 1; x++)
+	{
+		for (int y = gridPos.y - 1; y <= gridPos.y + 1; y++)
+		{
+			if (TileAt({ x, y }).HasMeme())
+			{
+				numOfMemes++;
+			}
+		}
+	}
+	return numOfMemes;
 }
 
 MemeField::MemeField(int nMemes)

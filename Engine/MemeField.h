@@ -33,6 +33,7 @@ private:
 private:
 	static const int tileNumX = 20;
 	static const int tileNumY = 20;
+	static const int memePercentage = 50;
 	//Vei2 pos = { 0,0 };
 	Vei2 pos = { Graphics::ScreenWidth/2 - tileNumX*SpriteCodex::tileSize/2,
 		Graphics::ScreenHeight/2 - tileNumY*SpriteCodex::tileSize/2 }; // center the field 
@@ -42,6 +43,7 @@ private:
 	const Tile& TileAt(const Vei2& gridPos) const;
 	int CalcSurroundingMemes(Vei2 gridPos);
 public:
+	MemeField() : MemeField((int)(tileNumX*tileNumY*(memePercentage / 100.0))) {}
 	MemeField(int nMemes);
 	void Draw(Graphics& gfx) const;
 	void OnLeftClick(const Vei2& gridPos);
