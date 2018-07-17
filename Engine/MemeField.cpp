@@ -57,7 +57,7 @@ void MemeField::OnLeftClick(const Vei2& screenPos)
 void MemeField::OnRightClick(const Vei2& screenPos)
 {
 	Tile& tile = TileAt(ScreenToGrid(screenPos));
-	if (!tile.IsFlagged())
+	if (!tile.IsFlagged() && !tile.IsRevealed())
 	{
 		tile.Flag();
 	}
