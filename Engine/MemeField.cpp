@@ -13,13 +13,19 @@ const MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos) const
 	return tiles[gridPos.y * tileNumX + gridPos.x];
 }
 
+int MemeField::CalcSurroundingMemes(Vei2 gridPos)
+{
+	Tile& tile = TileAt(gridPos);
+	return 0;
+}
+
 MemeField::MemeField(int nMemes)
 {
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<int> xDist(0, tileNumX - 1);
 	std::uniform_int_distribution<int> yDist(0, tileNumY - 1);
-
+	// loop through all the tiles and spawn memes randomly
 	for (int i = 0; i < nMemes; i++)
 	{
 		Vei2 randTilePos;
@@ -28,6 +34,14 @@ MemeField::MemeField(int nMemes)
 			randTilePos = { xDist(rng), yDist(rng) };
 			TileAt(randTilePos).SpawnMeme();
 		} while (!TileAt(randTilePos).HasMeme());
+	}
+	// loop through all the tiles and calculate the number of memes surrounding each
+	for (Vei2 gridPos = { 0, 0 }; gridPos.y < tileNumY; gridPos.y++)
+	{
+		for (gridPos.x = 0; gridPos.x < tileNumX; gridPos.x++)
+		{
+			TileAt(gridPos).SetSurroundingMemes(CalcSurroundingMemes(gridPos));
+		}
 	}
 }
 
@@ -40,7 +54,7 @@ void MemeField::Draw(Graphics& gfx) const
 	{
 		for (gridPos.x = 0; gridPos.x < tileNumX; gridPos.x++)
 		{
-			TileAt(gridPos).Draw(pos + gridPos * SpriteCodex::tileSize, gfx);
+			TileAt(gridPos).Draw(TileAt(gridPos), pos + gridPos * SpriteCodex::tileSize, gfx);
 		}
 	}
 }
@@ -48,6 +62,7 @@ void MemeField::Draw(Graphics& gfx) const
 void MemeField::OnLeftClick(const Vei2& screenPos)
 {
 	Vei2 gridPos = ScreenToGrid(screenPos);
+	// if screenPos is bottom right outside grid, do not attempt to flag or reveal
 	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
 		Tile& tile = TileAt(gridPos);
@@ -61,9 +76,9 @@ void MemeField::OnLeftClick(const Vei2& screenPos)
 void MemeField::OnRightClick(const Vei2& screenPos)
 {
 	Vei2 gridPos = ScreenToGrid(screenPos);
-	Tile& tile = TileAt(gridPos);
 	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
+		Tile& tile = TileAt(gridPos);
 		if (!tile.IsFlagged() && !tile.IsRevealed())
 		{
 			tile.Flag();
@@ -71,7 +86,7 @@ void MemeField::OnRightClick(const Vei2& screenPos)
 	}
 }
 
-Vei2 MemeField::ScreenToGrid(const Vei2 & screenPos) const
+Vei2 MemeField::ScreenToGrid(const Vei2 & screenPos)
 {
 	Vei2 gridPos = (screenPos - pos) / SpriteCodex::tileSize;
 	return (gridPos.x >= 0 && gridPos.x < tileNumX &&
@@ -84,7 +99,7 @@ void MemeField::Tile::SpawnMeme()
 	hasMeme = true;
 }
 
-void MemeField::Tile::Draw(const Vei2& screenPos, Graphics& gfx) const
+void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gfx) const
 {
 	switch (state)
 	{
@@ -96,7 +111,39 @@ void MemeField::Tile::Draw(const Vei2& screenPos, Graphics& gfx) const
 		SpriteCodex::DrawTileFlag(screenPos, gfx);
 		break;
 	case State::Revealed:
-		if (!hasMeme) { SpriteCodex::DrawTile0(screenPos, gfx); }
+		if (!hasMeme)
+		{
+			switch (tile.surroundingMemes)
+			{
+			case 0:
+				SpriteCodex::DrawTile0(screenPos, gfx);
+				break;
+			case 1:
+				SpriteCodex::DrawTile1(screenPos, gfx);
+				break;
+			case 2:
+				SpriteCodex::DrawTile2(screenPos, gfx);
+				break;
+			case 3:
+				SpriteCodex::DrawTile3(screenPos, gfx);
+				break;
+			case 4:
+				SpriteCodex::DrawTile4(screenPos, gfx);
+				break;
+			case 5:
+				SpriteCodex::DrawTile5(screenPos, gfx);
+				break;
+			case 6:
+				SpriteCodex::DrawTile6(screenPos, gfx);
+				break;
+			case 7:
+				SpriteCodex::DrawTile7(screenPos, gfx);
+				break;
+			case 8:
+				SpriteCodex::DrawTile8(screenPos, gfx);
+				break;
+			}
+		}
 		else { SpriteCodex::DrawTileBombRed(screenPos, gfx); }
 		break;
 	}
@@ -126,4 +173,9 @@ void MemeField::Tile::Flag()
 {
 
 	state = State::Flagged;
+}
+
+void MemeField::Tile::SetSurroundingMemes(int x)
+{
+	surroundingMemes = x;
 }

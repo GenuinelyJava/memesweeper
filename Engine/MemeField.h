@@ -18,15 +18,17 @@ private:
 	{
 	public:
 		void SpawnMeme();
-		void Draw(const Vei2& screenPos, Graphics& gfx) const;
+		void Draw(const Tile& tile, const Vei2& screenPos, Graphics& gfx) const;
 		bool HasMeme() const;
 		bool IsRevealed() const;
 		bool IsFlagged() const;
 		void Reveal();
 		void Flag();
+		void SetSurroundingMemes(int x);
 	private:
 		State state = State::Hidden;
 		bool hasMeme = false;
+		int surroundingMemes = 0;
 	};
 private:
 	static const int tileNumX = 20;
@@ -38,10 +40,11 @@ private:
 private:
 	Tile& TileAt(const Vei2& gridPos);
 	const Tile& TileAt(const Vei2& gridPos) const;
+	int CalcSurroundingMemes(Vei2 gridPos);
 public:
 	MemeField(int nMemes);
 	void Draw(Graphics& gfx) const;
 	void OnLeftClick(const Vei2& gridPos);
 	void OnRightClick(const Vei2& gridPos);
-	Vei2 ScreenToGrid(const Vei2& screenPos) const;
+	Vei2 ScreenToGrid(const Vei2& screenPos);
 };
