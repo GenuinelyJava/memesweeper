@@ -43,6 +43,8 @@ private:
 	const Tile& TileAt(const Vei2& gridPos) const;
 	int CalcSurroundingMemes(Vei2 gridPos);
 public:
+	static bool gameOver;
+public:
 	MemeField() : MemeField((int)(tileNumX*tileNumY*(memePercentage / 100.0))) {}
 	MemeField(int nMemes);
 	void Draw(Graphics& gfx) const;

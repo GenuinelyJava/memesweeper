@@ -3,6 +3,8 @@
 #include <random>
 #include <assert.h>
 
+bool MemeField::gameOver = false;
+
 MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos)
 {
 	return tiles[gridPos.y * tileNumX + gridPos.x];
@@ -83,6 +85,7 @@ void MemeField::OnLeftClick(const Vei2& screenPos)
 		if (!tile.IsRevealed() && !tile.IsFlagged())
 		{
 			tile.Reveal();
+			if (tile.HasMeme()) gameOver = true;
 		}
 	}
 }
@@ -115,55 +118,112 @@ void MemeField::Tile::SpawnMeme()
 
 void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gfx) const
 {
-	switch (state)
+	if (!gameOver)
 	{
-	case State::Hidden:
-		SpriteCodex::DrawTileButton(screenPos, gfx);
-		break;
-	case State::Flagged:
-		SpriteCodex::DrawTileButton(screenPos, gfx);
-		SpriteCodex::DrawTileFlag(screenPos, gfx);
-		break;
-	case State::Revealed:
-		if (!hasMeme)
+		switch (state)
 		{
-			switch (tile.surroundingMemes)
+		case State::Hidden:
+			SpriteCodex::DrawTileButton(screenPos, gfx);
+			break;
+		case State::Flagged:
+			SpriteCodex::DrawTileButton(screenPos, gfx);
+			SpriteCodex::DrawTileFlag(screenPos, gfx);
+			break;
+		case State::Revealed:
+			if (!hasMeme)
 			{
-			case 0:
-				SpriteCodex::DrawTile0(screenPos, gfx);
-				break;
-			case 1:
-				SpriteCodex::DrawTile1(screenPos, gfx);
-				break;
-			case 2:
-				SpriteCodex::DrawTile2(screenPos, gfx);
-				break;
-			case 3:
-				SpriteCodex::DrawTile3(screenPos, gfx);
-				break;
-			case 4:
-				SpriteCodex::DrawTile4(screenPos, gfx);
-				break;
-			case 5:
-				SpriteCodex::DrawTile5(screenPos, gfx);
-				break;
-			case 6:
-				SpriteCodex::DrawTile6(screenPos, gfx);
-				break;
-			case 7:
-				SpriteCodex::DrawTile7(screenPos, gfx);
-				break;
-			case 8:
-				SpriteCodex::DrawTile8(screenPos, gfx);
-				break;
+				switch (tile.surroundingMemes)
+				{
+				case 0:
+					SpriteCodex::DrawTile0(screenPos, gfx);
+					break;
+				case 1:
+					SpriteCodex::DrawTile1(screenPos, gfx);
+					break;
+				case 2:
+					SpriteCodex::DrawTile2(screenPos, gfx);
+					break;
+				case 3:
+					SpriteCodex::DrawTile3(screenPos, gfx);
+					break;
+				case 4:
+					SpriteCodex::DrawTile4(screenPos, gfx);
+					break;
+				case 5:
+					SpriteCodex::DrawTile5(screenPos, gfx);
+					break;
+				case 6:
+					SpriteCodex::DrawTile6(screenPos, gfx);
+					break;
+				case 7:
+					SpriteCodex::DrawTile7(screenPos, gfx);
+					break;
+				case 8:
+					SpriteCodex::DrawTile8(screenPos, gfx);
+					break;
+				}
+			}
+			else
+			{
+				SpriteCodex::DrawTileBomb(screenPos, gfx);
+			}
+			break;
+		}
+	}
+	else // game over (i like a little sensorship compared to chili :D )
+	{
+		switch (state)
+		{
+		case State::Hidden:
+			if (hasMeme) SpriteCodex::DrawTileBombRed(screenPos, gfx);
+			else SpriteCodex::DrawTileButton(screenPos, gfx);
+			break;
+		case State::Flagged:
+			if (IsFlagged())
+			{
+				SpriteCodex::DrawTileButton(screenPos, gfx);
+				SpriteCodex::DrawTileCross(screenPos, gfx);
+			}
+			break;
+		case State::Revealed:
+			if (!hasMeme)
+			{
+				switch (tile.surroundingMemes)
+				{
+				case 0:
+					SpriteCodex::DrawTile0(screenPos, gfx);
+					break;
+				case 1:
+					SpriteCodex::DrawTile1(screenPos, gfx);
+					break;
+				case 2:
+					SpriteCodex::DrawTile2(screenPos, gfx);
+					break;
+				case 3:
+					SpriteCodex::DrawTile3(screenPos, gfx);
+					break;
+				case 4:
+					SpriteCodex::DrawTile4(screenPos, gfx);
+					break;
+				case 5:
+					SpriteCodex::DrawTile5(screenPos, gfx);
+					break;
+				case 6:
+					SpriteCodex::DrawTile6(screenPos, gfx);
+					break;
+				case 7:
+					SpriteCodex::DrawTile7(screenPos, gfx);
+					break;
+				case 8:
+					SpriteCodex::DrawTile8(screenPos, gfx);
+					break;
+				}
+			}
+			else
+			{
+				SpriteCodex::DrawTileBomb(screenPos, gfx);
 			}
 		}
-		else
-		{ 
-			SpriteCodex::DrawTileBombRed(screenPos, gfx);
-			// draw game over screen
-		}
-		break;
 	}
 }
 
