@@ -8,7 +8,7 @@ MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos)
 	return tiles[gridPos.y * tileNumX + gridPos.x];
 }
 
-const MemeField::Tile & MemeField::TileAt(const Vei2 & gridPos) const
+const MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos) const
 {
 	return tiles[gridPos.y * tileNumX + gridPos.x];
 }
@@ -47,25 +47,36 @@ void MemeField::Draw(Graphics& gfx) const
 
 void MemeField::OnLeftClick(const Vei2& screenPos)
 {
-	Tile& tile = TileAt(ScreenToGrid(screenPos));
-	if (!tile.IsRevealed() && !tile.IsFlagged())
+	Vei2 gridPos = ScreenToGrid(screenPos);
+	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
-		tile.Reveal();
+		Tile& tile = TileAt(gridPos);
+		if (!tile.IsRevealed() && !tile.IsFlagged())
+		{
+			tile.Reveal();
+		}
 	}
 }
 
 void MemeField::OnRightClick(const Vei2& screenPos)
 {
-	Tile& tile = TileAt(ScreenToGrid(screenPos));
-	if (!tile.IsFlagged() && !tile.IsRevealed())
+	Vei2 gridPos = ScreenToGrid(screenPos);
+	Tile& tile = TileAt(gridPos);
+	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
-		tile.Flag();
+		if (!tile.IsFlagged() && !tile.IsRevealed())
+		{
+			tile.Flag();
+		}
 	}
 }
 
 Vei2 MemeField::ScreenToGrid(const Vei2 & screenPos) const
 {
-	return (screenPos - pos) / SpriteCodex::tileSize;
+	Vei2 gridPos = (screenPos - pos) / SpriteCodex::tileSize;
+	return (gridPos.x >= 0 && gridPos.x < tileNumX &&
+		gridPos.y >= 0 && gridPos.y < tileNumY) ? gridPos : Vei2(tileNumX, tileNumY); 
+	// if screenPos is outside grid return bottom right pos outside grid
 }
 
 void MemeField::Tile::SpawnMeme()
@@ -86,7 +97,7 @@ void MemeField::Tile::Draw(const Vei2& screenPos, Graphics& gfx) const
 		break;
 	case State::Revealed:
 		if (!hasMeme) { SpriteCodex::DrawTile0(screenPos, gfx); }
-		else { SpriteCodex::DrawTileBomb(screenPos, gfx); }
+		else { SpriteCodex::DrawTileBombRed(screenPos, gfx); }
 		break;
 	}
 }
