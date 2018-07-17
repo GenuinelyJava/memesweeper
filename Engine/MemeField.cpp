@@ -13,6 +13,26 @@ const MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos) const
 	return tiles[gridPos.y * tileNumX + gridPos.x];
 }
 
+void MemeField::RevealNeighbors(const Vei2 & gridPos)
+{
+	Tile& topLeft = TileAt({ gridPos.x - 1,gridPos.y - 1 }); topLeft.Reveal();
+	if (topLeft.NoNeighborMemes()) RevealNeighbors({ gridPos.x - 1,gridPos.y - 1 });
+	Tile& bottomLeft = TileAt({ gridPos.x - 1,gridPos.y + 1 }); bottomLeft.Reveal(); 
+	if (bottomLeft.NoNeighborMemes()) RevealNeighbors({ gridPos.x - 1,gridPos.y + 1 });
+	Tile& topRight = TileAt({ gridPos.x + 1,gridPos.y - 1 }); topRight.Reveal();
+	if (topRight.NoNeighborMemes()) RevealNeighbors({ gridPos.x + 1,gridPos.y - 1 });
+	Tile& bottomRight = TileAt({ gridPos.x + 1,gridPos.y + 1 }); bottomRight.Reveal(); 
+	if (bottomRight.NoNeighborMemes()) RevealNeighbors({ gridPos.x + 1,gridPos.y + 1 });
+	Tile& middleLeft = TileAt({ gridPos.x - 1,gridPos.y }); middleLeft.Reveal(); 
+	if (middleLeft.NoNeighborMemes()) RevealNeighbors({ gridPos.x - 1,gridPos.y });
+	Tile& middleRight = TileAt({ gridPos.x - 1,gridPos.y }); middleRight.Reveal(); 
+	if (middleRight.NoNeighborMemes()) RevealNeighbors({ gridPos.x - 1,gridPos.y });
+	Tile& topMiddle = TileAt({ gridPos.x,gridPos.y - 1 }); topMiddle.Reveal(); 
+	if (topMiddle.NoNeighborMemes()) RevealNeighbors({ gridPos.x,gridPos.y - 1 });
+	Tile& bottomMiddle = TileAt({ gridPos.x,gridPos.y - 1 }); bottomMiddle.Reveal(); 
+	if (bottomMiddle.NoNeighborMemes()) RevealNeighbors({ gridPos.x,gridPos.y - 1 });
+}
+
 int MemeField::CalcSurroundingMemes(Vei2 gridPos)
 {
 	int numOfMemes = 0;
@@ -83,6 +103,7 @@ void MemeField::OnLeftClick(const Vei2& screenPos)
 		if (!tile.IsRevealed() && !tile.IsFlagged() && !gameOver)
 		{
 			tile.Reveal();
+			if (tile.NoNeighborMemes()) RevealNeighbors(gridPos);
 			if (tile.HasMeme()) gameOver = true;
 		}
 	}
@@ -243,6 +264,11 @@ bool MemeField::Tile::IsRevealed() const
 bool MemeField::Tile::IsFlagged() const
 {
 	return state == State::Flagged;
+}
+
+bool MemeField::Tile::NoNeighborMemes() const
+{
+	return surroundingMemes == 0;
 }
 
 void MemeField::Tile::Reveal()

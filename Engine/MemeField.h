@@ -22,6 +22,7 @@ private:
 		bool HasMeme() const;
 		bool IsRevealed() const;
 		bool IsFlagged() const;
+		bool NoNeighborMemes() const;
 		void Reveal();
 		void Flag();
 		void SetSurroundingMemes(int x);
@@ -33,14 +34,12 @@ private:
 private:
 	static const int tileNumX = 20;
 	static const int tileNumY = 20;
-	static const int memePercentage = 25;
+	static const int memePercentage = 1;
 	//Vei2 pos = { 0,0 };
 	Vei2 pos = { Graphics::ScreenWidth/2 - tileNumX*SpriteCodex::tileSize/2,
 		Graphics::ScreenHeight/2 - tileNumY*SpriteCodex::tileSize/2 }; // center the field 
 	Tile tiles[tileNumX * tileNumY];
 private:
-	Tile& TileAt(const Vei2& gridPos);
-	const Tile& TileAt(const Vei2& gridPos) const;
 	int CalcSurroundingMemes(Vei2 gridPos);
 public:
 	bool gameOver = false;
@@ -51,4 +50,7 @@ public:
 	void OnLeftClick(const Vei2& gridPos);
 	void OnRightClick(const Vei2& gridPos);
 	Vei2 ScreenToGrid(const Vei2& screenPos);
+	Tile& TileAt(const Vei2& gridPos);
+	const Tile& TileAt(const Vei2& gridPos) const;
+	void RevealNeighbors(const Vei2& gridPos);
 };
