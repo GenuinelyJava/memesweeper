@@ -179,10 +179,15 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 			else SpriteCodex::DrawTileButton(screenPos, gfx);
 			break;
 		case State::Flagged:
-			if (IsFlagged())
+			if (!hasMeme)
 			{
 				SpriteCodex::DrawTileButton(screenPos, gfx);
 				SpriteCodex::DrawTileCross(screenPos, gfx);
+			}
+			else
+			{
+				SpriteCodex::DrawTileButton(screenPos, gfx);
+				SpriteCodex::DrawTileFlag(screenPos, gfx);
 			}
 			break;
 		case State::Revealed:
