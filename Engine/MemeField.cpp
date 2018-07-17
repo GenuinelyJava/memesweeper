@@ -20,9 +20,13 @@ int MemeField::CalcSurroundingMemes(Vei2 gridPos)
 	{
 		for (int y = gridPos.y - 1; y <= gridPos.y + 1; y++)
 		{
-			if (TileAt({ x, y }).HasMeme())
+			if (x >= 0 && x < tileNumX
+				&& y >= 0 && y < tileNumY)
 			{
-				numOfMemes++;
+				if (TileAt({ x, y }).HasMeme())
+				{
+					numOfMemes++;
+				}
 			}
 		}
 	}

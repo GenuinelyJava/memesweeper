@@ -33,7 +33,7 @@ private:
 private:
 	static const int tileNumX = 20;
 	static const int tileNumY = 20;
-	static const int memePercentage = 50;
+	static const int memePercentage = 25;
 	//Vei2 pos = { 0,0 };
 	Vei2 pos = { Graphics::ScreenWidth/2 - tileNumX*SpriteCodex::tileSize/2,
 		Graphics::ScreenHeight/2 - tileNumY*SpriteCodex::tileSize/2 }; // center the field 
