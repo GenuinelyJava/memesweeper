@@ -154,7 +154,11 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 				break;
 			}
 		}
-		else { SpriteCodex::DrawTileBombRed(screenPos, gfx); }
+		else
+		{ 
+			SpriteCodex::DrawTileBombRed(screenPos, gfx);
+			// draw game over screen
+		}
 		break;
 	}
 }
@@ -181,8 +185,7 @@ void MemeField::Tile::Reveal()
 
 void MemeField::Tile::Flag()
 {
-
-	state = State::Flagged;
+	state = state == State::Hidden ? State::Flagged : State::Hidden;
 }
 
 void MemeField::Tile::SetSurroundingMemes(int x)
