@@ -3,8 +3,6 @@
 #include <random>
 #include <assert.h>
 
-bool MemeField::gameOver = false;
-
 MemeField::Tile& MemeField::TileAt(const Vei2 & gridPos)
 {
 	return tiles[gridPos.y * tileNumX + gridPos.x];
@@ -70,7 +68,7 @@ void MemeField::Draw(Graphics& gfx) const
 	{
 		for (gridPos.x = 0; gridPos.x < tileNumX; gridPos.x++)
 		{
-			TileAt(gridPos).Draw(TileAt(gridPos), pos + gridPos * SpriteCodex::tileSize, gfx);
+			TileAt(gridPos).Draw(gameOver, TileAt(gridPos), pos + gridPos * SpriteCodex::tileSize, gfx);
 		}
 	}
 }
@@ -82,7 +80,7 @@ void MemeField::OnLeftClick(const Vei2& screenPos)
 	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
 		Tile& tile = TileAt(gridPos);
-		if (!tile.IsRevealed() && !tile.IsFlagged())
+		if (!tile.IsRevealed() && !tile.IsFlagged() && !gameOver)
 		{
 			tile.Reveal();
 			if (tile.HasMeme()) gameOver = true;
@@ -96,7 +94,7 @@ void MemeField::OnRightClick(const Vei2& screenPos)
 	if (gridPos.x != tileNumX && gridPos.y != tileNumY)
 	{
 		Tile& tile = TileAt(gridPos);
-		if (!tile.IsFlagged() && !tile.IsRevealed())
+		if (!tile.IsFlagged() && !tile.IsRevealed() & !gameOver)
 		{
 			tile.Flag();
 		}
@@ -116,9 +114,9 @@ void MemeField::Tile::SpawnMeme()
 	hasMeme = true;
 }
 
-void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gfx) const
+void MemeField::Tile::Draw(bool isGameOver, const Tile& tile, const Vei2& screenPos, Graphics& gfx) const
 {
-	if (!gameOver)
+	if (!isGameOver)
 	{
 		switch (state)
 		{
@@ -186,7 +184,7 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 			}
 			else
 			{
-				SpriteCodex::DrawTileButton(screenPos, gfx);
+				SpriteCodex::DrawTileBomb(screenPos, gfx);
 				SpriteCodex::DrawTileFlag(screenPos, gfx);
 			}
 			break;

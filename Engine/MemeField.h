@@ -18,7 +18,7 @@ private:
 	{
 	public:
 		void SpawnMeme();
-		void Draw(const Tile& tile, const Vei2& screenPos, Graphics& gfx) const;
+		void Draw(bool isGameOver, const Tile& tile, const Vei2& screenPos, Graphics& gfx) const;
 		bool HasMeme() const;
 		bool IsRevealed() const;
 		bool IsFlagged() const;
@@ -43,7 +43,7 @@ private:
 	const Tile& TileAt(const Vei2& gridPos) const;
 	int CalcSurroundingMemes(Vei2 gridPos);
 public:
-	static bool gameOver;
+	bool gameOver = false;
 public:
 	MemeField() : MemeField((int)(tileNumX*tileNumY*(memePercentage / 100.0))) {}
 	MemeField(int nMemes);
