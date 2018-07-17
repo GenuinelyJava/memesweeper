@@ -165,7 +165,7 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 			}
 			else
 			{
-				SpriteCodex::DrawTileBomb(screenPos, gfx);
+				SpriteCodex::DrawTileBombRed(screenPos, gfx);
 			}
 			break;
 		}
@@ -175,13 +175,13 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 		switch (state)
 		{
 		case State::Hidden:
-			if (hasMeme) SpriteCodex::DrawTileBombRed(screenPos, gfx);
+			if (hasMeme) SpriteCodex::DrawTileBomb(screenPos, gfx);
 			else SpriteCodex::DrawTileButton(screenPos, gfx);
 			break;
 		case State::Flagged:
 			if (!hasMeme)
 			{
-				SpriteCodex::DrawTileButton(screenPos, gfx);
+				SpriteCodex::DrawTileBomb(screenPos, gfx);
 				SpriteCodex::DrawTileCross(screenPos, gfx);
 			}
 			else
@@ -226,7 +226,7 @@ void MemeField::Tile::Draw(const Tile& tile, const Vei2& screenPos, Graphics& gf
 			}
 			else
 			{
-				SpriteCodex::DrawTileBomb(screenPos, gfx);
+				SpriteCodex::DrawTileBombRed(screenPos, gfx);
 			}
 		}
 	}
